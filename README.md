@@ -73,8 +73,8 @@ Option 3:
 
 ```bash
 git remote add upstream https://github.com/jcapels/si.git
-git pull upstream main
-git push origin main
+git pull upstream master
+git push origin master
 ```
 
 
