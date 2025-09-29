@@ -11,7 +11,7 @@ def read_csv(filename: str, sep:str, features: bool, label: bool) -> Dataset:
         Y = dataframe.iloc[:, -1].to_numpy()
         feature_names = dataframe.columns[:-1]
         label_name = dataframe.columns[-1]
-        return Dataset(X=X, Y=Y, features=feature_names, label=label_name)
+        return Dataset(X=X, y=Y, features=feature_names, label=label_name)
     
     elif features:
         X = dataframe.to_numpy()
