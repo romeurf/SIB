@@ -26,6 +26,21 @@ def read_csv(filename: str, sep:str, features: bool, label: bool) -> Dataset:
     else:
         return None
 
-def write_csv(filename: str, sep:str, features: bool, label: bool, dataset: Dataset) -> None:
-    dataframe = dataset.to_dataframe()
-    dataframe.to_csv(path_or_buf=filename, sep=sep, index=False)
+def write_csv(filename: str,
+              dataset: "Dataset",
+              features: bool,
+              label: bool,
+              sep: str = '.') -> None:
+    df = pd.DataFrame(dataset.X, columns=dataset.features)
+    if features:
+        df.columns = dataset.features
+    
+    if label:
+        Y = dataset.Y
+        label_name = dataset.label
+
+    else:
+        Y = None
+        label_name = None
+
+    df.to_csv(filename, sep=sep, index=False)
