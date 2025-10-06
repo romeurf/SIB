@@ -74,6 +74,8 @@ Option 3:
 ```bash
 git remote add upstream https://github.com/jcapels/si.git
 git pull upstream master
+# if it does not work
+git merge upstream/master
 git push origin master
 ```
 
