@@ -1,7 +1,7 @@
 # 5.1) Add the "PCA" class in the "pca.py" module on the "decomposition" sub-package. Consider the PCA class structure presented in the next slide.
 
 import numpy as np
-from si.base.Transformer import Transformer  # Update if necessary
+from si.base.transformer import Transformer
 
 class PCA(Transformer):
     def __init__(self, n_components=None):
