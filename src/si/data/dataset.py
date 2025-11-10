@@ -1,3 +1,4 @@
+from operator import index
 from typing import Tuple, Sequence, Union
 
 import numpy as np
@@ -125,6 +126,43 @@ class Dataset:
             "var": self.get_variance()
         }
         return pd.DataFrame.from_dict(data, orient="index", columns=self.features)
+    
+    def dropna(self) -> 'Dataset': # Exercise 2.1
+        """
+        Returns a new Dataset with rows containing NaN values removed
+        Returns
+        -------
+        Dataset
+        """
+        # Identify rows without any NaN in self.X
+        non_nan_mask = ~np.isnan(self.X).any(axis=1)
+        # Filter self.X and self.y using the mask
+        self.X = self.X[non_nan_mask]
+        self.y = self.y[non_nan_mask]
+        return self
+    
+    def fillna(self, value) -> 'Dataset': # Exercise 2.2
+
+        # If value is a float, use it for all NaNs
+        if isinstance(value, float):
+            self.X = np.where(np.isnan(self.X), value, self.X)
+        elif value == "mean":
+            # Replace NaNs in each column with the column mean
+            col_means = np.nanmean(self.X, axis=0)
+            inds = np.where(np.isnan(self.X))
+            self.X[inds] = np.take(col_means, inds[1])
+        elif value == "median":
+            # Replace NaNs in each column with the column median
+            col_medians = np.nanmedian(self.X, axis=0)
+            inds = np.where(np.isnan(self.X))
+            self.X[inds] = np.take(col_medians, inds[1])
+        return self
+    
+    def remove_by_index(self, index: int) -> 'Dataset': # Exercise 2.3
+        self.X = np.delete(self.X, index, axis=0)
+        self.y = np.delete(self.y, index)
+        return self
+
 
     @classmethod
     def from_dataframe(cls, df: pd.DataFrame, label: str = None):
