@@ -1,3 +1,5 @@
+# 9.1) In the "models" sub-package add the "random_forest_classifier.py" module. Implement the RandomForestClassifier class by taking into consideration the structure of the class shown in the next slides.
+
 import numpy as np
 from scipy import stats
 from si.data.dataset import Dataset
