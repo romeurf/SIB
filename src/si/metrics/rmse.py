@@ -1,3 +1,4 @@
+#7.1) Add the RMSE metric to the "metrics" sub-package. You must create a new module named "rmse.py". Consider the structure of the rmse function as presented in the following slide.
 import numpy as np
 
 def rmse(y_true: np.ndarray, y_pred: np.ndarray) -> float:
