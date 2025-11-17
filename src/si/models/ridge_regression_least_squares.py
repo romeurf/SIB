@@ -1,3 +1,5 @@
+# Exercise 8: In the "models" sub-package add the "ridge_regression_least_squares.py" module which will contain the RidgeRegressionLeastSquates class (refer to the next slides).
+
 import numpy as np
 from si.data.dataset import Dataset
 from si.base.model import Model
