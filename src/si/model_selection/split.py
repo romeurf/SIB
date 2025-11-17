@@ -42,6 +42,7 @@ def train_test_split(dataset: Dataset, test_size: float = 0.2, random_state: int
     test = Dataset(dataset.X[test_idxs], dataset.y[test_idxs], features=dataset.features, label=dataset.label)
     return train, test
 
+# 6.1) In the "split.py" module of the "model_selection" subpackage add the "stratified_train_test_split" function (Consider the structure of the function presented in the next slide).
 
 def stratified_train_test_split(dataset: Dataset, 
                                 test_size: float = 0.2, 
