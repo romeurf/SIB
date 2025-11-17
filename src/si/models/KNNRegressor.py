@@ -63,40 +63,45 @@ class KNNRegressor(Model):
         predictions = []
         # Iterate over each sample in the test set
         for sample in X_test:
-            # Calculate distances from the current sample to all training samples
+            # Step 1: Calculate distances from the current sample to all training samples
             distances = self.distance(sample, self.dataset.X)
             
-            # Get the indices of the k nearest neighbors
+            # Step 2: Get the indices of the k nearest neighbors
             # np.argsort returns indices that would sort the array
             k_nearest_indices = np.argsort(distances)[:self.k]
             
-            # Get the corresponding y values (labels) from the training set
+            # Step 3: Get the corresponding y values (labels) from the training set
             k_nearest_values = self.dataset.y[k_nearest_indices]
             
-            # Calculate the average of the k nearest values
+            # Step 4: Calculate the average of the k nearest values
             prediction = np.mean(k_nearest_values)
             
             predictions.append(prediction)
         
         return np.array(predictions)
 
-    def _score(self, dataset: Dataset) -> float:
+    # --- THIS IS THE CORRECTED METHOD ---
+    def _score(self, dataset: Dataset, predictions: np.ndarray) -> float:
         """
-        Calculates the RMSE score for the given dataset.
+        Calculates the RMSE score for the given dataset using the provided predictions.
 
         Parameters
         ----------
         dataset : Dataset
             The dataset (test set) to score.
+        predictions : np.ndarray
+            The predictions made by the public predict() method.
 
         Returns
         -------
         float
             The RMSE score.
         """
-        # Get the predictions
-        y_pred = self._predict(dataset)
+        # We no longer need to call self._predict() here, 
+        # as the 'predictions' are passed in by the base Model.score() method.
+        
+        # Get true values
+        y_true = dataset.y
         
         # Calculate RMSE
-        y_true = dataset.y
-        return rmse(y_true, y_pred)
+        return rmse(y_true, predictions)
