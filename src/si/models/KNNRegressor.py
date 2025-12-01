@@ -63,24 +63,23 @@ class KNNRegressor(Model):
         predictions = []
         # Iterate over each sample in the test set
         for sample in X_test:
-            # Step 1: Calculate distances from the current sample to all training samples
+            # Calculate distances from the current sample to all training samples
             distances = self.distance(sample, self.dataset.X)
             
-            # Step 2: Get the indices of the k nearest neighbors
+            # Get the indices of the k nearest neighbors
             # np.argsort returns indices that would sort the array
             k_nearest_indices = np.argsort(distances)[:self.k]
             
-            # Step 3: Get the corresponding y values (labels) from the training set
+            # Get the corresponding y values (labels) from the training set
             k_nearest_values = self.dataset.y[k_nearest_indices]
             
-            # Step 4: Calculate the average of the k nearest values
+            # Calculate the average of the k nearest values
             prediction = np.mean(k_nearest_values)
             
             predictions.append(prediction)
         
         return np.array(predictions)
 
-    # --- THIS IS THE CORRECTED METHOD ---
     def _score(self, dataset: Dataset, predictions: np.ndarray) -> float:
         """
         Calculates the RMSE score for the given dataset using the provided predictions.
@@ -97,8 +96,6 @@ class KNNRegressor(Model):
         float
             The RMSE score.
         """
-        # We no longer need to call self._predict() here, 
-        # as the 'predictions' are passed in by the base Model.score() method.
         
         # Get true values
         y_true = dataset.y
