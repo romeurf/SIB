@@ -62,27 +62,25 @@ class RidgeRegressionLeastSquares(Model):
             X = (X - self.mean) / self.std
 
         # Add intercept term (column of ones) to X
-        # np.c_ adds the column of ones to the beginning
-        X_intercept = np.c_[np.ones(n_samples), X]
+        X_intercept = np.c_[np.ones(n_samples), X] # np.c_ adds the column of ones to the beginning
 
         # Compute the penalty matrix (L2 * Identity)
-        # Size is (n_features + 1) to account for the intercept
-        identity_matrix = np.eye(n_features + 1)
+        identity_matrix = np.eye(n_features + 1) # Size is (n_features + 1) to account for the intercept
         penalty_matrix = self.l2_penalty * identity_matrix
 
         # Change the first position to 0 (don't penalize theta_zero)
         penalty_matrix[0, 0] = 0
 
         # Compute model parameters using the Normal Equation
-        # Formula: thetas = inv(X^T . X + penalty_matrix) . (X^T . y)
-        XTX = X_intercept.T @ X_intercept
-        XTy = X_intercept.T @ y
         
-        thetas = np.linalg.inv(XTX + penalty_matrix) @ XTy
+        A = X_intercept.T.dot(X_intercept) + penalty_matrix # X^T * X + L2 * I
+        b = X_intercept.T.dot(y)                     # X^T * y
+        thetas = np.linalg.solve(A, b)               # Solve for thetas
+
         
         # Store the intercept (theta_zero) and feature coefficients (theta)
         self.theta_zero = thetas[0]
-        self.theta = thetas[1:]
+        self.theta = thetas[1:] # Exclude the intercept from theta
         
         return self
 
@@ -98,20 +96,20 @@ class RidgeRegressionLeastSquares(Model):
         X = dataset.X
         n_samples = X.shape[0]
 
-        # Scale the data using the *stored* mean and std
+        # Scale the data using the stored mean and std
         if self.scale:
             X = (X - self.mean) / self.std
 
         # Add intercept term
-        X_intercept = np.c_[np.ones(n_samples), X]
+        X_intercept = np.c_[np.ones(n_samples), X] # np.c_ adds the column of ones to the beginning
         
         # Concatenate thetas
         # np.r_ combines theta_zero and theta back into one vector
         thetas = np.r_[self.theta_zero, self.theta]
 
         # Compute predicted Y
-        # Formula: y_pred = X_intercept . thetas
-        predictions = X_intercept @ thetas
+        
+        predictions = X_intercept.dot(thetas) # Y = X * thetas
 
         return predictions
 
