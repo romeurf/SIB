@@ -1,3 +1,5 @@
+# 5.1) Add the "PCA" class in the "pca.py" module on the "decomposition" sub-package. Consider the PCA class structure presented in the next slide.
+
 import numpy as np
 from si.base.transformer import Transformer
 from si.data.dataset import Dataset
@@ -40,29 +42,29 @@ class PCA(Transformer):
         """
         X = dataset.X
         
-        # Step 1: Center data
-        self.mean = np.mean(X, axis=0)
+        # Center data
+        self.mean = np.mean(X, axis=0) # axis 0: mean of each column
         X_centered = X - self.mean
         
-        # Step 2: Covariance and eigenvalue decomposition
-        cov_matrix = np.cov(X_centered, rowvar=False)
-        eigenvalues, eigenvectors = np.linalg.eig(cov_matrix)
+        # Covariance and eigenvalue decomposition
+        cov_matrix = np.cov(X_centered, rowvar=False) # np.cov compute covariance matrix; rowvar=False: variables are columns
+        eigenvalues, eigenvectors = np.linalg.eig(cov_matrix) # np.linalg.eig - compute eigenvalues and eigenvectors
         
         # Get the sum of all eigenvalues before slicing
         total_variance = np.sum(eigenvalues)
 
-        # Step 3: Sort by eigenvalues descending
-        idx = np.argsort(eigenvalues)[::-1]
+        # Sort by eigenvalues descending
+        idx = np.argsort(eigenvalues)[::-1] # np.argsort sorts ascending, so [::-1] reverses for descending
         eigenvalues = eigenvalues[idx]
         eigenvectors = eigenvectors[:, idx]  # Sort columns
 
-        # Step 4: Select top n_components
+        # Select top n_components
         if self.n_components is not None:
-            eigenvalues = eigenvalues[:self.n_components]
-            eigenvectors = eigenvectors[:, :self.n_components]
+            eigenvalues = eigenvalues[:self.n_components] # Select top n_components
+            eigenvectors = eigenvectors[:, :self.n_components] # Select corresponding eigenvectors
         
         # Store components (eigenvectors) as rows
-        self.components = eigenvectors.T  # Shape (n_components, n_features)
+        self.components = eigenvectors.T  # Shape (n_components, n_features); transpose to have components as rows to do dot product
 
         # Store explained variance (using the correct total)
         self.explained_variance = eigenvalues / total_variance
@@ -85,12 +87,12 @@ class PCA(Transformer):
         """
         X = dataset.X
         
-        # Step 1: Center data using the stored mean
+        # Center data using the stored mean
         X_centered = X - self.mean
         
-        # Step 2: Project onto components
+        # Project onto components
         # (n_samples, n_features) @ (n_features, n_components) -> (n_samples, n_components)
-        X_reduced = np.dot(X_centered, self.components.T)
+        X_reduced = np.dot(X_centered, self.components.T) # Transpose back for dot product; np.dot does matrix multiplication
         
         # Create new feature names
         new_features = [f"PC{i+1}" for i in range(self.components.shape[0])]
