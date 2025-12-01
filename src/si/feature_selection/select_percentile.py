@@ -40,7 +40,7 @@ class SelectPercentile(Transformer):
         dataset : Dataset
             The Dataset object to fit.
         """
-        # This now works: score_func (f_classification) takes the dataset directly
+        # score_func (f_classification) takes the dataset directly
         self.F, self.p = self.score_func(dataset)
         return self
 
@@ -65,18 +65,17 @@ class SelectPercentile(Transformer):
         n_features = X.shape[1]
         
         # Calculate the number of features to select
-        n_selected = int(np.ceil(n_features * self.percentile / 100))
+        n_selected = int(np.ceil(n_features * self.percentile / 100)) # np.ceil to round up
 
-        # --- Your excellent logic for handling ties ---
         # Sort features by F score (descending)
-        sorted_indices = np.argsort(-self.F)
+        sorted_indices = np.argsort(-self.F)  # np.argsort sorts ascending, so use -self.F for descending
         
         # Find the threshold F-value (the score of the k-th feature)
-        threshold = self.F[sorted_indices[n_selected - 1]]
+        threshold = self.F[sorted_indices[n_selected - 1]] 
         
         # Start with features strictly greater than the threshold
         mask = self.F > threshold
-        n_above = np.sum(mask)
+        n_above = np.sum(mask) # Number of features above the threshold
         
         # Add features that are tied at the threshold, if needed
         if n_above < n_selected:
