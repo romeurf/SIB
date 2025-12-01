@@ -76,14 +76,14 @@ class RandomForestClassifier(Model):
             # Create the bootstrapped dataset
             X_boot = dataset.X[sample_indices][:, feature_indices]
             y_boot = dataset.y[sample_indices]
-            # Get feature names, as required by your DecisionTreeClassifier
+            # Get feature names, as required by DecisionTreeClassifier
             boot_features = [dataset.features[i] for i in feature_indices] 
             
             boot_dataset = Dataset(X_boot, y_boot, features=boot_features, label=dataset.label)
             
             # Create and train a decision tree
-            # We pass the parameters to the tree
-            tree = DecisionTreeClassifier(min_sample_split=self.min_samples_split,
+            # Pass the parameters to the tree
+            tree = DecisionTreeClassifier(min_samples_split=self.min_samples_split,
                                           max_depth=self.max_depth,
                                           mode=self.mode)
             tree.fit(boot_dataset)
@@ -122,7 +122,7 @@ class RandomForestClassifier(Model):
         
         # Get the most common predicted class (majority vote)
         # stats.mode finds the mode along axis=1 (for each sample)
-        final_predictions = stats.mode(stacked_preds, axis=1, keepdims=False)[0]
+        final_predictions = stats.mode(stacked_preds, axis=1, keepdims=False)[0] # keepdims=False to return 1D array; [0] to get the mode values
         
         return final_predictions
 
