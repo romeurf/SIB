@@ -28,15 +28,15 @@ def train_test_split(dataset: Dataset, test_size: float = 0.2, random_state: int
     # set random state
     np.random.seed(random_state)
     # get dataset size
-    n_samples = dataset.shape()[0]
+    n_samples = dataset.shape()[0] # accesses the first element of the tuple, which is the number of rows
     # get number of samples in the test set
     n_test = int(n_samples * test_size)
     # get the dataset permutations
     permutations = np.random.permutation(n_samples)
     # get samples in the test set
-    test_idxs = permutations[:n_test]
+    test_idxs = permutations[:n_test] # accesses the first n_test elements
     # get samples in the training set
-    train_idxs = permutations[n_test:]
+    train_idxs = permutations[n_test:] # accesses the remaining elements
     # get the training and testing datasets
     train = Dataset(dataset.X[train_idxs], dataset.y[train_idxs], features=dataset.features, label=dataset.label)
     test = Dataset(dataset.X[test_idxs], dataset.y[test_idxs], features=dataset.features, label=dataset.label)
@@ -71,21 +71,21 @@ def stratified_train_test_split(dataset: Dataset,
         np.random.seed(random_state)
         
     # Get unique class labels and their counts
-    classes, class_counts = np.unique(dataset.y, return_counts=True)
+    classes, class_counts = np.unique(dataset.y, return_counts=True) # np.unique returns the sorted unique elements of an array and their counts
     
     # Initialize empty lists for train and test indices
     train_indices = []
     test_indices = []
 
     # Loop through unique labels
-    for cls, count in zip(classes, class_counts):
+    for cls, count in zip(classes, class_counts): #zip to iterate over both classes and their counts
         
         # Calculate the number of test samples for the current class
         # Use np.ceil to ensure at least 1 test sample if test_size is small
         n_test_samples = int(np.ceil(count * test_size))
         
         # Get all indices for the current class
-        class_indices = np.where(dataset.y == cls)[0]
+        class_indices = np.where(dataset.y == cls)[0] # np.where returns the indices of elements that satisfy the condition
         
         # Shuffle and select indices for the test set
         np.random.shuffle(class_indices)
