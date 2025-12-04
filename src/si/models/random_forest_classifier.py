@@ -18,7 +18,7 @@ class RandomForestClassifier(Model):
                  max_features: int = None, 
                  min_samples_split: int = 2, 
                  max_depth: int = 10, 
-                 mode: str = 'gini', 
+                 mode: str = 'gini', # gini is the default impurity
                  seed: int = None):
         """
         Parameters
@@ -68,10 +68,10 @@ class RandomForestClassifier(Model):
             
             # Create bootstrap dataset
             # Bootstrap samples (with replacement)
-            sample_indices = np.random.choice(n_samples, n_samples, replace=True)
+            sample_indices = np.random.choice(n_samples, n_samples, replace=True) #replace=True for bootstrap
             
             # Bootstrap features (without replacement)
-            feature_indices = np.random.choice(n_features, self.max_features, replace=False)
+            feature_indices = np.random.choice(n_features, self.max_features, replace=False) #replace=False to avoid duplicate features
             
             # Create the bootstrapped dataset
             X_boot = dataset.X[sample_indices][:, feature_indices]
