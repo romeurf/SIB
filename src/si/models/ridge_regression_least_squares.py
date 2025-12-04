@@ -66,6 +66,7 @@ class RidgeRegressionLeastSquares(Model):
 
         # Compute the penalty matrix (L2 * Identity)
         identity_matrix = np.eye(n_features + 1) # Size is (n_features + 1) to account for the intercept
+                                                # np.eye creates an identity matrix
         penalty_matrix = self.l2_penalty * identity_matrix
 
         # Change the first position to 0 (don't penalize theta_zero)
