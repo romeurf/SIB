@@ -65,6 +65,7 @@ class PCA(Transformer):
         
         # Store components (eigenvectors) as rows
         self.components = eigenvectors.T  # Shape (n_components, n_features); transpose to have components as rows to do dot product
+                                         # each component is a row vector after transpose
 
         # Store explained variance (using the correct total)
         self.explained_variance = eigenvalues / total_variance
@@ -93,7 +94,7 @@ class PCA(Transformer):
         # Project onto components
         # (n_samples, n_features) @ (n_features, n_components) -> (n_samples, n_components)
         X_reduced = np.dot(X_centered, self.components.T) # Transpose back for dot product; np.dot does matrix multiplication
-        
+                                                        # each row is a sample after transpose
         # Create new feature names
         new_features = [f"PC{i+1}" for i in range(self.components.shape[0])]
 
