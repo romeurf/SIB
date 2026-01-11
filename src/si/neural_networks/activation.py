@@ -177,3 +177,43 @@ class ReLUActivation(ActivationLayer):
             The derivative of the activation function.
         """
         return np.where(input >= 0, 1, 0)
+
+# Exercise 13.1: Implement the Tanh activation function
+
+class TanhActivation(ActivationLayer):
+
+    def activation_function(self, input: np.ndarray):
+        """
+        Tanh activation: squashes values to (-1, 1).
+        """
+        return np.tanh(input)
+
+    def derivative(self, input: np.ndarray):
+        """
+        Derivative of tanh: 1 - tanh(x)^2.
+        """
+        t = np.tanh(input)
+        return 1 - t ** 2
+    
+# Exercise 13.2: Implement the Softmax activation function
+
+class SoftmaxActivation(ActivationLayer):
+
+    def activation_function(self, input: np.ndarray):
+        """
+        Softmax activation: converts logits to probabilities per row.
+        """
+        # numerical stability: subtract max per sample
+        shifted = input - np.max(input, axis=1, keepdims=True)
+        exps = np.exp(shifted)
+        return exps / np.sum(exps, axis=1, keepdims=True)
+
+    def derivative(self, input: np.ndarray):
+        """
+        Placeholder derivative.
+
+        In most frameworks, softmax is combined with cross-entropy so that
+        the loss computes dL/dz directly (softmax + CE gradient = y_hat - y),
+        and the activation layer just passes that gradient through.
+        """
+        return 1
