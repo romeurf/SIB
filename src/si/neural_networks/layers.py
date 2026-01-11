@@ -140,4 +140,58 @@ class DenseLayer(Layer):
         tuple
             The shape of the output of the layer.
         """
-        return (self.n_units,) 
+        return (self.n_units,)
+    
+# Exercise 12: Implement the Dropout layer for a neural network.
+
+class Dropout(Layer):
+    def __init__(self, probability: float, input_shape: tuple = None):
+            super().__init__()
+            self.probability = probability
+            self._input_shape = input_shape
+            self.mask = None
+            self.input = None
+            self.output = None
+
+    def forward_propagation(self, input: np.ndarray, training: bool) -> np.ndarray:
+            self.input = input
+            if training:
+                keep_prob = 1.0 - self.probability
+                scale = 1.0 / keep_prob
+                self.mask = np.random.binomial(1, keep_prob, size=input.shape)
+                self.output = input * self.mask * scale
+                return self.output
+            else:
+                self.mask = np.ones_like(input)
+                self.output = input
+                return input
+
+    def backward_propagation(self, output_error: np.ndarray) -> np.ndarray:
+            return output_error * self.mask
+
+    def output_shape(self) -> tuple:
+            return self.input_shape()
+
+    def parameters(self) -> int:
+            return 0
+
+# Exercise 12.2: Test the layer with a random input and check if the output shows the desired behaviour.
+
+import numpy as np
+
+np.random.seed(0)
+x = np.ones((3, 5))  # easy to see changes
+
+drop = Dropout(probability=0.5, input_shape=(5,))
+
+# Training mode: some entries should be 0, others scaled
+y_train = drop.forward_propagation(x, training=True)
+print("Input:\n", x)
+print("Output (training):\n", y_train)
+print("Mask:\n", drop.mask)
+
+# Inference mode: should pass through unchanged
+y_eval = drop.forward_propagation(x, training=False)
+print("Output (inference):\n", y_eval)
+
+#During training, units are randomly zeroed according to the mask, and the remaining ones are scaled by 1/(1−p) so their values become 2 when p=0.5. In inference, all values pass through unchanged, matching the input.
