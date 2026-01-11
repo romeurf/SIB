@@ -1,6 +1,7 @@
 # Exercise 11: Implement a function for randomized hyperparameter search with cross-validation.
 
 import numpy as np
+from sklearn.linear_model import LogisticRegression
 
 from si.model_selection.cross_validate import k_fold_cross_validation
 
@@ -129,7 +130,7 @@ def randomized_search_cv(model,
             best_hyperparams = current_params.copy()
 
     # 8. BUILD FINAL OUTPUT DICTIONARY
-    
+
     results = {
         "hyperparameters": all_hyperparams,
         "scores": all_scores,
@@ -138,3 +139,36 @@ def randomized_search_cv(model,
     }
 
     return results
+
+# Exercise 11.1: Test the randomized_search_cv function
+
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import RandomizedSearchCV
+
+data = pd.read_csv(r"datasets\breast_bin\breast-bin.csv", header=None)
+X = data.iloc[:, :-1].values
+y = data.iloc[:, -1].values
+
+model = SGDClassifier(loss="log_loss", penalty="l2")
+
+param_dist = {
+    "alpha": np.linspace(0.001, 0.0001, 100),
+    "max_iter": np.linspace(1000, 2000, 200, dtype=int)
+}
+
+search = RandomizedSearchCV(
+    estimator=model,
+    param_distributions=param_dist,
+    n_iter=10,
+    cv=3,
+    scoring="accuracy",
+    random_state=0
+)
+
+search.fit(X, y)
+
+print("All mean CV scores:", search.cv_results_["mean_test_score"])
+print("Best score:", search.best_score_)
+print("Best params:", search.best_params_)
