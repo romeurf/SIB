@@ -37,11 +37,11 @@ class StackingClassifier(Model):
         """
         import numpy as np
 
-        # 1) Fit each base model on the original data
+        # Fit each base model on the original data
         for model in self.models:
             model.fit(X, y)
 
-        # 2) Collect predictions from each base model on X
+        # Collect predictions from each base model on X
         #    Each prediction vector has length n_samples.
         base_preds = []
         for model in self.models:
@@ -49,9 +49,9 @@ class StackingClassifier(Model):
             preds = model.predict(X)
             base_preds.append(preds)
 
-        # 3) Stack predictions column-wise to form meta-features
-        #    If there are M base models and N samples,
-        #    meta_X has shape (N, M).
+        # Stack predictions column-wise to form meta-features
+        # If there are M base models and N samples,
+        # meta_X has shape (N, M).
         meta_X = np.column_stack(base_preds)
 
         # 4) Train the final model on the meta-features and original targets
@@ -70,16 +70,16 @@ class StackingClassifier(Model):
         """
         import numpy as np
 
-        # 1) Get predictions from each base model on X
+        # Get predictions from each base model on X
         base_preds = []
         for model in self.models:
             preds = model.predict(X)
             base_preds.append(preds)
 
-        # 2) Stack predictions into meta-features (N_samples, N_models)
+        # Stack predictions into meta-features (N_samples, N_models)
         meta_X = np.column_stack(base_preds)
 
-        # 3) Use the final model to obtain final predictions
+        # Use the final model to obtain final predictions
         final_preds = self.final_model.predict(meta_X)
         return final_preds
 
@@ -91,10 +91,10 @@ class StackingClassifier(Model):
         1. Get predictions using the predict method.
         2. Compute accuracy between predicted and true labels.
         """
-        # 1) Obtain predictions
+        # Obtain predictions
         y_pred = self.predict(X)
 
-        # 2) Compute accuracy
+        # Compute accuracy
         correct = (y_pred == y).sum()
         total = len(y)
         accuracy = correct / total
