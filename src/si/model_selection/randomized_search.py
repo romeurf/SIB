@@ -48,7 +48,7 @@ def randomized_search_cv(model,
             - 'best_score': best mean score.
     """
 
-    # 1. CHECK THAT ALL PROVIDED HYPERPARAMETERS EXIST ON THE MODEL
+    # CHECK THAT ALL PROVIDED HYPERPARAMETERS EXIST ON THE MODEL
 
     for param_name in hyperparameter_grid.keys():
         if not hasattr(model, param_name):
@@ -64,12 +64,11 @@ def randomized_search_cv(model,
     best_score = -np.inf
     best_hyperparams = None
 
-    # 2. SAMPLE n_iter HYPERPARAMETER COMBINATIONS
+    # SAMPLE n_iter HYPERPARAMETER COMBINATIONS
     #    USING np.random.choice OVER ALL POSSIBLE COMBINATIONS
 
     # Build a list of all combinations explicitly.
-    # For small grids this is fine; for large grids you might prefer a
-    # more memory-efficient sampler.
+    
     param_names = list(hyperparameter_grid.keys())
     param_values = [hyperparameter_grid[name] for name in param_names]
 
@@ -105,11 +104,11 @@ def randomized_search_cv(model,
     for idx in chosen_indices:
         current_params = all_combinations[idx]
 
-        # 3. Set model hyperparameters with the current combination
+        # Set model hyperparameters with the current combination
         for name, value in current_params.items():
             setattr(model, name, value)
 
-        # 4. Cross validate the model using k_fold_cross_validation
+        # Cross validate the model using k_fold_cross_validation
         #    k_fold_cross_validation(model, dataset, scoring, cv) that returns a list of scores (one per fold).
         
         scores = k_fold_cross_validation(
@@ -119,17 +118,17 @@ def randomized_search_cv(model,
             cv=cv
         )
 
-        # 5. Save the mean of the scores and respective hyperparameters
+        # Save the mean of the scores and respective hyperparameters
         mean_score = float(np.mean(scores))
         all_hyperparams.append(current_params.copy())
         all_scores.append(mean_score)
 
-        # 7. Update best score and best hyperparameters if needed
+        # Update best score and best hyperparameters if needed
         if mean_score > best_score:
             best_score = mean_score
             best_hyperparams = current_params.copy()
 
-    # 8. BUILD FINAL OUTPUT DICTIONARY
+    # BUILD FINAL OUTPUT DICTIONARY
 
     results = {
         "hyperparameters": all_hyperparams,
