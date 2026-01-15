@@ -204,7 +204,7 @@ class SoftmaxActivation(ActivationLayer):
         Softmax activation: converts logits to probabilities per row.
         """
         # numerical stability: subtract max per sample
-        shifted = input - np.max(input, axis=1, keepdims=True)
+        shifted = input - np.max(input, axis=1, keepdims=True) #axis=1 for rows
         exps = np.exp(shifted)
         return exps / np.sum(exps, axis=1, keepdims=True)
 
