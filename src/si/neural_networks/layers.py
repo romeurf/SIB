@@ -180,11 +180,11 @@ class Dropout(Layer):
 import numpy as np
 
 np.random.seed(0)
-x = np.ones((3, 5))  # easy to see changes
+x = np.ones((3, 5))
 
 drop = Dropout(probability=0.5, input_shape=(5,))
 
-# Training mode: some entries should be 0, others scaled
+# Training mode: should apply dropout
 y_train = drop.forward_propagation(x, training=True)
 print("Input:\n", x)
 print("Output (training):\n", y_train)
